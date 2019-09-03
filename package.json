@@ -1,0 +1,22 @@
+{
+  "name": "kroller",
+  "version": "1.0.0",
+  "description": "A phaser game",
+  "main": "index.js",
+  "author": "panietoar@gmail.com",
+  "license": "MIT",
+  "dependencies": {
+    "phaser": "^3.19.0",
+    "webpack": "^4.39.3"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.5.5",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/plugin-proposal-object-rest-spread": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "babel-loader": "^8.0.6",
+    "copy-webpack-plugin": "^5.0.4",
+    "webpack-cli": "^3.3.7",
+    "webpack-dev-server": "^3.8.0"
+  }
+}
