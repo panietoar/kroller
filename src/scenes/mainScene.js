@@ -6,18 +6,18 @@ export class MainScene extends Phaser.Scene {
   ENEMY_SPAWN_TIMER = 4000
 
   preload () {
-    this.load.spritesheet('projectile', 'assets/sprites/projectile4.png', {
-      frameWidth: 64,
-      frameHeight: 64
-    })
     this.load.spritesheet('explosion', 'assets/sprites/explosion71.png', {
       frameWidth: 64,
       frameHeight: 64
     })
+    this.load.spritesheet('missile', 'assets/sprites/missile.png', {
+      frameHeight: 32,
+      frameWidth: 32
+    })
   }
 
   create () {
-    this.cameras.main.setBackgroundColor('#ffffff')
+    this.cameras.main.setBackgroundColor('#999999')
     this.createPlayer()
     this.createObjectPools()
     this.killedEnemies = 0
@@ -56,12 +56,12 @@ export class MainScene extends Phaser.Scene {
   createAnimations () {
     this.anims.create({
       key: 'fired',
-      frames: this.anims.generateFrameNumbers('projectile', {
+      frames: this.anims.generateFrameNumbers('missile', {
         start: 0,
-        end: 16,
+        end: 7,
         first: 0
       }),
-      frameRate: 8,
+      frameRate: 10,
       repeat: -1
     })
 
@@ -72,7 +72,7 @@ export class MainScene extends Phaser.Scene {
         end: 16,
         first: 0
       }),
-      frameRate: 4
+      frameRate: 64
     })
   }
 
@@ -114,7 +114,7 @@ export class MainScene extends Phaser.Scene {
 
     this.player.receiveRewards(enemy)
     this.killedEnemies++
-    console.log(`Enemy ${enemy.name} killed`)
+    console.log(`Enemy ${enemy.name} killed, total: ${this.killedEnemies}`)
   }
 
   gameOver () {

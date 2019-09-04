@@ -13,6 +13,10 @@ export class Vector {
     this.x = this.x / this.length
     this.y = this.y / this.length
   }
+
+  get angle() {
+    return Math.atan2(this.y, this.x)
+  }
 }
 
 export class NormalizedVector extends Vector {

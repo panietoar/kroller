@@ -125,6 +125,6 @@ export default class Player extends GameObjects.Ellipse {
   }
 
   receiveRewards (enemy) {
-    console.log('Killed enemy:', enemy.name)
+    //console.log('Killed enemy:', enemy.name)
   }
 }

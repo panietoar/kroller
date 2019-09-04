@@ -3,7 +3,7 @@ import generateUID from '../utils/uid'
 
 export class Projectile extends GameObjects.Sprite {
   constructor (scene) {
-    super(scene, 0, 0, 'projectile')
+    super(scene, 0, 0, 'missile')
     this.uid = generateUID()
     this.baseSpeed = 0.3
     this.scene = scene
@@ -14,6 +14,7 @@ export class Projectile extends GameObjects.Sprite {
 
   fire (x, y, direction) {
     this.setPosition(x, y)
+    this.setRotation(direction.angle)
     this.direction = direction
     this.setActive(true)
     this.setVisible(true)
@@ -21,13 +22,13 @@ export class Projectile extends GameObjects.Sprite {
 
   impact () {
     this.scene.projectiles.killAndHide(this)
-    /* let explosion = this.scene.explosions.get()
+    let explosion = this.scene.explosions.get()
 
     if(explosion) {
       explosion.explode(
         this.x,
         this.y)
-    } */
+    }
   }
 
   update (time, delta) {

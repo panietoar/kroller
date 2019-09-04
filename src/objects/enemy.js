@@ -8,14 +8,9 @@ export class Enemy extends GameObjects.Ellipse {
     this.uid = generateUID()
     this.scene = scene
 
-    this.healtText = scene.add.text(
-      this.x - 12,
-      this.y - 60,
-      '',
-      {
-        color: '#000000'
-      }
-    )
+    this.healtText = scene.add.text(this.x - 12, this.y - 60, '', {
+      color: '#000000'
+    })
   }
 
   receiveDamage (projectile) {
@@ -38,22 +33,21 @@ export class Enemy extends GameObjects.Ellipse {
     this.setY(this.y - speedY)
   }
 
-  spawn(x, y) {
+  spawn (x, y) {
     this.setPosition(x, y)
     this.setVisible(true)
     this.setActive(true)
     this.healtText.setVisible(true)
   }
 
-  checkHealth () {  
+  checkHealth () {
     this.healtText.setText(`${this.health.toFixed(0)}`)
     if (this.health <= 0) {
       this.die()
-
     }
   }
 
-  die() {
+  die () {
     this.scene.enemies.killAndHide(this)
     this.healtText.setVisible(false)
     this.health = 40
