@@ -1,11 +1,11 @@
 import Player from '../objects/player'
 import { PurpleEnemy } from '../objects/enemy'
-import Projectile from '../objects/projectile';
+import { Projectile, Explosion } from '../objects/projectile'
 
 export class MainScene extends Phaser.Scene {
   ENEMY_SPAWN_TIMER = 4000
 
-  preload() {
+  preload () {
     this.load.spritesheet('projectile', 'assets/sprites/projectile4.png', {
       frameWidth: 64,
       frameHeight: 64
@@ -17,40 +17,74 @@ export class MainScene extends Phaser.Scene {
   }
 
   create () {
-    const controls = this.createControls()
-    this.player = new Player(this, 'mage', controls)
-    this.physics.add.existing(this.player)
-    this.add.existing(this.player)
     this.cameras.main.setBackgroundColor('#ffffff')
-    this.projectiles = this.physics.add.group({
-      classType: Projectile,
-      max: 3,
-      runChildUpdate: true
-    })
-    this.enemies = this.physics.add.group()
+    this.createPlayer()
+    this.createObjectPools()
     this.killedEnemies = 0
     this.paused = false
     this.generateEnemies()
-    //this.killEmmiter = new Phaser.Events.EventEmitter()
-    //this.killEmmiter.on('enemyKilled', this.player.receiveRewards, this.player)
+    this.killEmmiter = new Phaser.Events.EventEmitter()
+    this.killEmmiter.on('enemyKilled', this.enemyKilled, this)
+    this.createAnimations()
+  }
 
+  createObjectPools () {
+    this.projectiles = this.physics.add.group({
+      classType: Projectile,
+      max: 3,
+      runChildUpdate: true,
+      active: false,
+      visible: false
+    })
+
+    this.explosions = this.add.group({
+      classType: Explosion,
+      max: 3,
+      active: false,
+      visible: false
+    })
+
+    this.enemies = this.physics.add.group({
+      classType: PurpleEnemy,
+      max: 4,
+      runChildUpdate: true,
+      active: false,
+      visible: false
+    })
+  }
+
+  createAnimations () {
     this.anims.create({
       key: 'fired',
-      frames: this.anims.generateFrameNumbers('projectile', { start: 0, end: 16, first: 0 }),
+      frames: this.anims.generateFrameNumbers('projectile', {
+        start: 0,
+        end: 16,
+        first: 0
+      }),
       frameRate: 8,
       repeat: -1
     })
 
     this.anims.create({
       key: 'explosion',
-      frames: this.anims.generateFrameNumbers('explosion', { start: 0, end: 16, first: 0 }),
-      frameRate: 8
+      frames: this.anims.generateFrameNumbers('explosion', {
+        start: 0,
+        end: 16,
+        first: 0
+      }),
+      frameRate: 4
     })
+  }
+
+  createPlayer () {
+    const controls = this.createControls()
+    this.player = new Player(this, 'mage', controls)
+    this.physics.add.existing(this.player)
+    this.add.existing(this.player)
   }
 
   createControls () {
     const arrowKeys = this.input.keyboard.createCursorKeys()
-    this.pauseKey = arrowKeys.space
     const wasdKeys = this.input.keyboard.addKeys('W,S,A,D')
     const controls = { ...arrowKeys, ...wasdKeys }
     this.input.on('pointerup', pointer => this.player.fireProjectile(pointer))
@@ -59,60 +93,28 @@ export class MainScene extends Phaser.Scene {
 
   update (time, delta) {
     this.player.update(delta)
-    this.enemies.getChildren().forEach(enemy => {
-      enemy.update(delta, this.player.position)
-    })
-    this.projectiles.getChildren().forEach(projectile => {
-      projectile.update(delta)
-    })
-    this.physics.add.overlap(
-      this.enemies,
-      this.projectiles,
-      this.attackCollision,
-      null,
-      this
-    )
-    this.physics.add.overlap(
-      this.enemies,
-      this.player,
-      this.enemyCollision,
-      null,
-      this
-    )
+    this.enemies.preUpdate(time, delta)
+    this.projectiles.preUpdate(time, delta)
+
     if (this.killedEnemies === 10) {
       this.gameOver()
     }
-    if (this.pauseKey.isDown) {
-      this.paused = !this.paused
-    }
-  }
-
-  enemyCollision (player, enemy) {
-    player.receiveDamage(enemy)
-  }
-
-  attackCollision (enemy, projectile) {
-    enemy.receiveDamage(projectile)
-    projectile.explode()
-    //this.deleteProjectile(projectile)
-  }
-
-  deleteProjectile (projectile) {
-    this.projectiles.remove(projectile, true, true)
-    projectile.destroy()
-  }
-
-  removeEnemy (enemy) {
-    this.enemies.remove(enemy, true, true)
-    this.killedEnemies++
   }
 
   generateEnemies () {
     this.enemyInterval = setInterval(() => {
-     if(this.enemies.countActive() < 3 ){
-       this.enemies.add(new PurpleEnemy(this), true)
-     }
+      const enemy = this.enemies.get()
+      if(enemy) {
+        enemy.spawn(700, 600)
+      }
     }, this.ENEMY_SPAWN_TIMER)
+  }
+
+  enemyKilled (enemy) {
+
+    this.player.receiveRewards(enemy)
+    this.killedEnemies++
+    console.log(`Enemy ${enemy.name} killed`)
   }
 
   gameOver () {

@@ -1,7 +1,6 @@
 import { GameObjects } from 'phaser'
 import { HEALTH, SPEED } from '../constants/playerDefaults'
 import generateUID from '../utils/uid'
-import Projectile from '../objects/projectile'
 import { NormalizedVector } from '../utils/geometry'
 
 export default class Player extends GameObjects.Ellipse {
@@ -42,6 +41,7 @@ export default class Player extends GameObjects.Ellipse {
   update (delta) {
     this.handleInput(delta)
     this.checkInvulnerable(delta)
+    this.checkEnemyCollision()
     this.checkHealth()
   }
 
@@ -78,17 +78,32 @@ export default class Player extends GameObjects.Ellipse {
     }
   }
 
+  checkEnemyCollision () {
+    this.scene.physics.overlap(
+      this.scene.enemies,
+      this,
+      this.enemyCollision,
+      null,
+      this
+    )
+  }
+
+  enemyCollision (player, enemy) {
+    player.receiveDamage(enemy)
+  }
+
   fireProjectile (pointer) {
     if (this.onCoolDown) {
       return
     }
     let projectile = this.scene.projectiles.get()
 
-    if(projectile) {
+    if (projectile) {
       projectile.fire(
         this.x,
         this.y,
-        new NormalizedVector(pointer.x - this.x, pointer.y - this.y))
+        new NormalizedVector(pointer.x - this.x, pointer.y - this.y)
+      )
     }
     this.onCoolDown = true
     window.setTimeout(() => {
@@ -97,7 +112,7 @@ export default class Player extends GameObjects.Ellipse {
   }
 
   receiveDamage ({ damage }) {
-    if(this.invulnerable) {
+    if (this.invulnerable) {
       return
     }
     this.health -= damage
@@ -109,7 +124,7 @@ export default class Player extends GameObjects.Ellipse {
     this.isFilled = false
   }
 
-  receiveRewards(enemy) {
-    console.log('Killed enemy:' ,enemy.name)
+  receiveRewards (enemy) {
+    console.log('Killed enemy:', enemy.name)
   }
 }
