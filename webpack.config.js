@@ -35,6 +35,10 @@ module.exports = {
       {
         from: PATH.resolve(__dirname, 'index.html'),
         to: PATH.resolve(__dirname, 'build')
+      },
+      {
+        from: PATH.resolve(__dirname, 'assets', '**', '*'),
+        to: PATH.resolve(__dirname, 'build')
       }
     ]),
     new webpack.DefinePlugin({

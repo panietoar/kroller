@@ -15,7 +15,7 @@ export default class Player extends GameObjects.Ellipse {
 
     this.health = HEALTH[type]
     this.baseSpeed = SPEED[type]
-    this.attackCoolDown = 2
+    this.attackCoolDown = 1.5
     this.onCoolDown = false
     this.invulnerable = false
     this.invulnerableTime = 0
@@ -34,8 +34,6 @@ export default class Player extends GameObjects.Ellipse {
       }
     )
   }
-
-  initializeState () {}
 
   get position () {
     return { x: this.x, y: this.y }
@@ -84,13 +82,14 @@ export default class Player extends GameObjects.Ellipse {
     if (this.onCoolDown) {
       return
     }
-    const projectile = new Projectile(
-      this.scene,
-      this.x,
-      this.y,
-      new NormalizedVector(pointer.x - this.x, pointer.y - this.y)
-    )
-    this.scene.projectiles.add(projectile, true)
+    let projectile = this.scene.projectiles.get()
+
+    if(projectile) {
+      projectile.fire(
+        this.x,
+        this.y,
+        new NormalizedVector(pointer.x - this.x, pointer.y - this.y))
+    }
     this.onCoolDown = true
     window.setTimeout(() => {
       this.onCoolDown = false
@@ -98,12 +97,19 @@ export default class Player extends GameObjects.Ellipse {
   }
 
   receiveDamage ({ damage }) {
+    if(this.invulnerable) {
+      return
+    }
     this.health -= damage
     this.invulnerable = true
     setTimeout(() => {
       this.invulnerable = false
       this.isFilled = true
-    }, INVULNERABLE_TIME)
+    }, this.INVULNERABLE_TIME)
     this.isFilled = false
+  }
+
+  receiveRewards(enemy) {
+    console.log('Killed enemy:' ,enemy.name)
   }
 }

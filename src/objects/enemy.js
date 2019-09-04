@@ -1,23 +1,17 @@
 import { GameObjects } from 'phaser'
 import generateUID from '../utils/uid'
-import { getJSDocThisTag } from 'typescript'
 import { NormalizedVector } from '../utils/geometry'
 
-export default class Enemy extends GameObjects.Ellipse {
-  constructor (scene) {
-    super(scene, 700, 600, 75, 75, 0xff00ff)
+export class Enemy extends GameObjects.Ellipse {
+  constructor (scene, color) {
+    super(scene, 700, 600, 75, 75, color)
     this.uid = generateUID()
     this.scene = scene
-    this.setName('Enemy')
-
-    this.health = 40
-    this.baseSpeed = 0.1
-    this.damage = 15
 
     this.healtText = scene.add.text(
       this.x - 12,
       this.y - 60,
-      `${this.health.toFixed(0)}`,
+      '',
       {
         color: '#000000'
       }
@@ -47,8 +41,20 @@ export default class Enemy extends GameObjects.Ellipse {
   checkHealth () {
     this.healtText.setText(`${this.health.toFixed(0)}`)
     if (this.health <= 0) {
+      //this.scene.killEmmiter.emit('enemyKilled', this)
       this.scene.removeEnemy(this)
       this.healtText.destroy()
     }
+  }
+}
+
+export class PurpleEnemy extends Enemy {
+  constructor (scene) {
+    super(scene, 0xff00ff)
+    this.setName('Purple')
+
+    this.health = 40
+    this.baseSpeed = 0.1
+    this.damage = 15
   }
 }
