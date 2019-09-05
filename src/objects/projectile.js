@@ -14,7 +14,7 @@ export class Projectile extends GameObjects.Sprite {
 
   fire (x, y, direction) {
     this.setPosition(x, y)
-    this.setRotation(direction.angle)
+    this.setRotation(direction.angle())
     this.direction = direction
     this.setActive(true)
     this.setVisible(true)
