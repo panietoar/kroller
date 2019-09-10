@@ -6,7 +6,10 @@ const gameConfig = {
   width: 1280,
   height: 768,
   physics: {
-    default: 'arcade'
+    default: 'arcade',
+    arcade: {
+      gravity: { y: 0 }
+    }
   },
   scene: MainScene
 }

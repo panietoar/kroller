@@ -80,5 +80,6 @@ export class PurpleEnemy extends Enemy {
     this.setHealth(55)
     this.baseSpeed = 0.8
     this.damage = 15
+    this.experience = 1
   }
 }

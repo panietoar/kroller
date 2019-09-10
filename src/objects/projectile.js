@@ -12,10 +12,11 @@ export class Projectile extends GameObjects.Sprite {
     this.anims.play('fired')
   }
 
-  fire (x, y, direction) {
+  fire (x, y, direction, power) {
     this.setPosition(x, y)
     this.setRotation(direction.angle())
     this.direction = direction
+    this.power = power
     this.setActive(true)
     this.setVisible(true)
   }
@@ -62,7 +63,7 @@ export class Projectile extends GameObjects.Sprite {
 
   checkBounds () {
     if (this.isOutOfBounds()) {
-      this.scene.projectiles.killAndHide(this)
+      this.impact()
     }
   }
 

@@ -6,8 +6,16 @@ export const HEALTH = {
 }
 
 export const SPEED = {
-  mage: 0.15,
-  warrior: 0.1,
-  rogue: 0.3,
-  cleric: 0.2
+  mage: 100,
+  warrior: 1,
+  rogue: 1,
+  cleric: 1
+}
+
+export const LEVELS = {
+
+}
+
+export function nextLevel(level){
+  return Math.round(0.04 * Math.pow(level, 3) + 0.8 * Math.pow(level, 2) + 2 * level)
 }

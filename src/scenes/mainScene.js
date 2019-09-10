@@ -96,7 +96,7 @@ export class MainScene extends Phaser.Scene {
     this.enemies.preUpdate(time, delta)
     this.projectiles.preUpdate(time, delta)
 
-    if (this.killedEnemies === 10) {
+    if (this.player.level === 10) {
       this.gameOver()
     }
   }
@@ -111,10 +111,8 @@ export class MainScene extends Phaser.Scene {
   }
 
   enemyKilled (enemy) {
-
     this.player.receiveRewards(enemy)
     this.killedEnemies++
-    console.log(`Enemy ${enemy.name} killed, total: ${this.killedEnemies}`)
   }
 
   gameOver () {
