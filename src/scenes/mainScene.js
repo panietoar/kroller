@@ -1,6 +1,7 @@
 import Player from '../objects/player'
 import { PurpleEnemy } from '../objects/enemy'
 import { Projectile, Explosion } from '../objects/projectile'
+import { GameObjects } from 'phaser'
 
 export class MainScene extends Phaser.Scene {
   ENEMY_SPAWN_TIMER = 4000
@@ -26,6 +27,12 @@ export class MainScene extends Phaser.Scene {
     this.killEmmiter = new Phaser.Events.EventEmitter()
     this.killEmmiter.on('enemyKilled', this.enemyKilled, this)
     this.createAnimations()
+    this.wall = new GameObjects.Rectangle(this, 250, 300, 250, 180, 0xfa38b7)
+    this.physics.add.existing(this.wall)
+    this.wall.body.setImmovable(true)
+    this.add.existing(this.wall)
+    this.physics.add.collider(this.player, this.wall)
+    this.physics.add.collider(this.enemies, this.wall)
   }
 
   createObjectPools () {
@@ -81,6 +88,7 @@ export class MainScene extends Phaser.Scene {
     this.player = new Player(this, 'mage', controls)
     this.physics.add.existing(this.player)
     this.add.existing(this.player)
+    this.player.body.setBounce(1, 1)
   }
 
   createControls () {

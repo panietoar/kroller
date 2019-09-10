@@ -8,9 +8,9 @@ export class Enemy extends GameObjects.Ellipse {
     this.uid = generateUID()
     this.scene = scene
 
-    //  this.healthText = scene.add.text(this.x - 12, this.y - 60, '', {
-    //     color: '#000000'
-    //   })
+    this.healthText = scene.add.text(this.x - 12, this.y - 60, '', {
+         color: '#000000'
+       })
     }
     
     get position () {
@@ -32,31 +32,31 @@ export class Enemy extends GameObjects.Ellipse {
     this.checkHealth()
     this.move(delta, this.scene.player.position)
     this.healthBar.updatePosition(this.position)
-    // this.healthText.setText(`${this.currentHealth.toFixed(0)}`)
-    // this.healthText.setPosition(this.x - 12, this.y - 60)
+    this.healthText.setText(`${this.currentHealth.toFixed(0)}`)
+    this.healthText.setPosition(this.x - 12, this.y - 60)
   }
 
   move (delta, { x, y }) {
     let direction = new Phaser.Math.Vector2(this.x - x, this.y - y)
     direction = direction.normalize()
 
-    const speedX = direction.x * this.baseSpeed
-    const speedY = direction.y * this.baseSpeed
-    this.setX(this.x - speedX)
-    this.setY(this.y - speedY)
+    const speedX = direction.x * this.baseSpeed * delta
+    const speedY = direction.y * this.baseSpeed * delta
+    this.body.setVelocityX(-speedX)
+    this.body.setVelocityY(-speedY)
   }
 
   spawn (x, y) {
     this.setPosition(x, y)
     this.setVisible(true)
     this.setActive(true)
-    // this.healthText.setVisible(true)
+    this.healthText.setVisible(true)
     this.healthBar.updateHealth(this.currentHealth)
     this.healthBar.draw(true)
   }
 
   checkHealth () {
-    // this.healthText.setText(`${this.currentHealth.toFixed(0)}`)
+    this.healthText.setText(`${this.currentHealth.toFixed(0)}`)
     if (this.currentHealth <= 0) {
       this.die()
     }
@@ -78,7 +78,7 @@ export class PurpleEnemy extends Enemy {
     this.setName('Purple')
 
     this.setHealth(55)
-    this.baseSpeed = 0.8
+    this.baseSpeed = 3
     this.damage = 15
     this.experience = 1
   }

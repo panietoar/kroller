@@ -14,7 +14,7 @@ export default class Player extends GameObjects.Ellipse {
 
     this.health = HEALTH[type]
     this.baseSpeed = SPEED[type]
-    this.power = 15
+    this.power = 20
     this.attackCoolDown = 1.5
     this.onCoolDown = false
     this.invulnerable = false
@@ -88,7 +88,10 @@ export default class Player extends GameObjects.Ellipse {
   }
 
   enemyCollision(player, enemy) {
-    player.receiveDamage(enemy)
+    console.log(enemy.active)
+    if (enemy.active) {
+      player.receiveDamage(enemy)
+    }
   }
 
   fireProjectile(pointer) {
