@@ -2,7 +2,7 @@ import { GameObjects } from 'phaser'
 import generateUID from '../utils/uid'
 
 export class Projectile extends GameObjects.Sprite {
-  constructor(scene) {
+  constructor (scene) {
     super(scene, 0, 0, 'missile')
     this.uid = generateUID()
     this.baseSpeed = 0.3
@@ -12,7 +12,7 @@ export class Projectile extends GameObjects.Sprite {
     this.anims.play('fired')
   }
 
-  fire(x, y, direction, power) {
+  fire (x, y, direction, power) {
     this.setPosition(x, y)
     this.setRotation(direction.angle())
     this.direction = direction
@@ -21,24 +21,22 @@ export class Projectile extends GameObjects.Sprite {
     this.setVisible(true)
   }
 
-  impact() {
+  impact () {
     this.scene.projectiles.killAndHide(this)
     let explosion = this.scene.explosions.get()
 
     if (explosion) {
-      explosion.explode(
-        this.x,
-        this.y)
+      explosion.explode(this.x, this.y)
     }
   }
 
-  update(time, delta) {
+  update (time, delta) {
     this.updatePosition(delta)
     this.checkBounds()
     this.checkImpact()
   }
 
-  checkImpact() {
+  checkImpact () {
     this.scene.physics.overlap(
       this.scene.enemies,
       this,
@@ -46,20 +44,15 @@ export class Projectile extends GameObjects.Sprite {
       null,
       this
     )
-    this.scene.physics.overlap(
-      this.scene.wall,
-      this,
-      this.impact,
-      null, this
-    )
+    this.scene.physics.overlap(this.scene.wall, this, this.impact, null, this)
   }
 
-  impactCollision(projectile, enemy) {
+  impactCollision (projectile, enemy) {
     enemy.receiveDamage(projectile)
     projectile.impact()
   }
 
-  updatePosition(delta) {
+  updatePosition (delta) {
     const speed = delta * this.baseSpeed
     const speedX = this.direction.x * speed
     const speedY = this.direction.y * speed
@@ -67,24 +60,24 @@ export class Projectile extends GameObjects.Sprite {
     this.setY(this.y + speedY)
   }
 
-  checkBounds() {
+  checkBounds () {
     if (this.isOutOfBounds()) {
       this.impact()
     }
   }
 
-  isOutOfBounds() {
+  isOutOfBounds () {
     return this.x > 1280 || this.x < 0 || this.y > 768 || this.y < 0
   }
 }
 
 export class Explosion extends GameObjects.Sprite {
-  constructor(scene) {
+  constructor (scene) {
     super(scene, 0, 0, 'explosion')
     this.anims.play('explosion')
   }
 
-  explode(x, y) {
+  explode (x, y) {
     this.setPosition(x, y)
     this.setActive(true)
     this.setVisible(true)

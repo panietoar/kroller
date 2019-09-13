@@ -1,11 +1,9 @@
 import Player from '../objects/player'
-import { PurpleEnemy } from '../objects/enemy'
+import { Skeleton } from '../objects/enemy'
 import { Projectile, Explosion } from '../objects/projectile'
 import { GameObjects } from 'phaser'
 
 export class MainScene extends Phaser.Scene {
-  ENEMY_SPAWN_TIMER = 4000
-
   preload () {
     this.load.spritesheet('explosion', 'assets/sprites/explosion71.png', {
       frameWidth: 64,
@@ -14,6 +12,10 @@ export class MainScene extends Phaser.Scene {
     this.load.spritesheet('missile', 'assets/sprites/missile.png', {
       frameHeight: 32,
       frameWidth: 32
+    })
+    this.load.spritesheet('skeleton', 'assets/sprites/skeleton.png', {
+      frameHeight: 64,
+      frameWidth: 64
     })
   }
 
@@ -52,8 +54,7 @@ export class MainScene extends Phaser.Scene {
     })
 
     this.enemies = this.physics.add.group({
-      classType: PurpleEnemy,
-      max: 4,
+      classType: Skeleton,
       runChildUpdate: true,
       active: false,
       visible: false
@@ -80,6 +81,46 @@ export class MainScene extends Phaser.Scene {
         first: 0
       }),
       frameRate: 64
+    })
+
+    this.anims.create({
+      key: 'skeleton-walk-up',
+      frames: this.anims.generateFrameNumbers('skeleton', {
+        start: 105,
+        end: 112
+      }),
+      frameRate: 12,
+      repeat: -1
+    })
+
+    this.anims.create({
+      key: 'skeleton-walk-left',
+      frames: this.anims.generateFrameNumbers('skeleton', {
+        start: 118,
+        end: 125
+      }),
+      frameRate: 12,
+      repeat: -1
+    })
+
+    this.anims.create({
+      key: 'skeleton-walk-down',
+      frames: this.anims.generateFrameNumbers('skeleton', {
+        start: 131,
+        end: 138
+      }),
+      frameRate: 12,
+      repeat: -1
+    })
+
+    this.anims.create({
+      key: 'skeleton-walk-right',
+      frames: this.anims.generateFrameNumbers('skeleton', {
+        start: 144,
+        end: 151
+      }),
+      frameRate: 12,
+      repeat: -1
     })
   }
 
@@ -112,10 +153,10 @@ export class MainScene extends Phaser.Scene {
   generateEnemies () {
     this.enemyInterval = setInterval(() => {
       const enemy = this.enemies.get()
-      if(enemy) {
-        enemy.spawn(700, 600)
+      if (enemy) {
+        enemy.spawn(1300, 340)
       }
-    }, this.ENEMY_SPAWN_TIMER)
+    }, 4000)
   }
 
   enemyKilled (enemy) {

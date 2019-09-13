@@ -25,7 +25,7 @@ export default class HealthBar extends GameObjects.Rectangle {
   calcLength (newHealth) {
     return (newHealth / this.maxHealth).toFixed(1)
   }
-  
+
   updateHealth (currentHealth) {
     const normalizedLength = this.calcLength(currentHealth)
     let tween = this.scene.tweens.add({
